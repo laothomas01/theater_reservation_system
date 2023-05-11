@@ -6,6 +6,7 @@ import java.time.Month;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.List;
 
@@ -20,7 +21,8 @@ public class main {
         //initialize database of shows with show times and available seats
         //populate when loading text files
 
-        Hashtable<String, ArrayList<seat>> DataBase_Of_Shows = new Hashtable<>();
+        //this list of seats should be a hashmap to make access to specific seats easier
+        HashMap<String, ArrayList<seat>> DataBase_Of_Shows = new HashMap<>();
         ArrayList<seat> seats = new ArrayList<>();
         //======================= TEST DATA =======================
         seats.add(new seat(1, "m", 35, true));
@@ -43,12 +45,81 @@ public class main {
         }
 
 
-//        String dateTimeString = localDateTime1;
-        //        DataBase_Of_Shows.put(, seats);
-        //        DataBase_Of_Shows.put(localDateTime1,)
-        //populate when loading signed up users
-        Hashtable<String, customer> DataBase_Of_Users = new Hashtable<>();
+        HashMap<String, customer> DataBase_Of_Users = new HashMap<>();
+//        DataBase_Of_Users.put("a", 1);
+//        if (DataBase_Of_Users.containsKey("a")) {
+//            System.out.println("Duplicate key adding");
+//        } else {
+//            DataBase_Of_Users.put("a", 2);
+//        }
+//        System.out.println(DataBase_Of_Users);
 
+        boolean run = true;
+        while (run) {
+            System.out.println("Sign [U]p\n" + "Sign [I]n\n" + "E[X]it");
+            line = input.readLine();
+            switch (line) {
+                case "u":
+                case "U":
+                    System.out.println("=======================SIGN UP=======================");
+                    System.out.println("[C]reate User");
+                    System.out.println("[B]ack");
+                    line = input.readLine();
+                    switch (line) {
+                        case "c":
+                        case "C":
+                            //when user signs up, populate an internal database of signed up users
+                            //key = username, value = hashtable of reservations
+                            //hashtable of reservations:
+                            // key = date_and_time, value = list of reserved seats
+                            System.out.println("Enter User Id:");
+                            String username;
+                            line = input.readLine();
+                            username = line;
+                            System.out.println("Enter password:");
+                            String password;
+                            line = input.readLine();
+                            password = line;
+
+                            if (DataBase_Of_Users.containsKey(username)) {
+                                System.out.println("Username has already been taken!");
+                            } else {
+                                DataBase_Of_Users.put(username, new customer(username, password));
+                            }
+
+                        default:
+                            break;
+                    }
+                case "i":
+                case "I":
+                    System.out.println("[S]ign In");
+                    System.out.println("[B]ack");
+                    switch (line) {
+                        case "s":
+                        case "S":
+                            System.out.println("Login Id:");
+                            String username;
+                            line = input.readLine();
+                            username = line;
+                            System.out.println("Login Password:");
+                            String password;
+                            line = input.readLine();
+                            password = line;
+                            if (DataBase_Of_Users.get(username).getUserId().equals(username) && DataBase_Of_Users.get(username).getPassword().equals(password)) {
+                                //access signed up user account
+                                customer c = DataBase_Of_Users.get(username);
+
+                                //when user makes and finishes a reservation, we also update the global internal database
+                                //when another user signs up and want to add an already reserved seat for a specific show time, other users should NOT be able to reserve that seat`
+                            }
+                            //if login successful
+
+
+                    }
+                    break;
+
+            }
+        }
     }
 
     public void runApp() throws IOException {
@@ -63,8 +134,6 @@ public class main {
                 case "u":
                 case "U":
                     System.out.println("=======================SIGN UP=======================");
-//                    System.out.println("Enter User Id:");
-//                    System.out.println("Enter password:");
                     System.out.println("[C]reate User");
                     System.out.println("[B]ack");
                     line = input.readLine();

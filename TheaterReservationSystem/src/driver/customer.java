@@ -9,6 +9,8 @@ public class customer {
     String userId;
     String password;
 
+    //reservations
+
 
     public customer(String id, String password) {
 
