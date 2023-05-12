@@ -53,6 +53,7 @@ public class main {
         String input;
 
         while (run) {
+            // ========================== MAIN MENU PROMPT ===========================
             System.out.println("Sign [U]p\n" + "Sign [I]n\n" + "E[X]it");
             input = br.readLine();
             switch (input) {
@@ -91,6 +92,8 @@ public class main {
                         System.out.println("[E]nter Login");
                         System.out.println("[B]ack");
                         input = br.readLine();
+
+                        // ========================= SIGNING IN EDGE CASES =====================================
                         if (!input.equalsIgnoreCase("e") && !input.equalsIgnoreCase("b")) {
                             System.out.println("Invalid Input");
                         } else if (input.equalsIgnoreCase("b")) {
@@ -101,76 +104,111 @@ public class main {
                             if (!Database_Of_Signups.containsKey(username)) {
                                 System.out.println("Username does not exist!");
                             } else {
+                                //================ VALID USERNAME ============================================
                                 System.out.println("Enter login password:");
                                 String password = br.readLine();
                                 // transition to transaction mode
+
+
+                                //================= SIGN IN SUCCESSFUL ===========================================
                                 if (Database_Of_Signups.get(username).getPassword().equals(password)) {
                                     System.out.println("Sign in successful");
-                                    //create a reference to the customer account to persist made reservations
+
+                                    //create a reference variable to the customer object stored inside signed up user database
+
+                                    //data will persist inside data structure until end of program
                                     customer user = Database_Of_Signups.get(input);
+
                                     // prompt reservation menu
                                     boolean transactionMode = true;
-
+                                    //=========================== TRANSACTION MODE ==========================
+                                    //start transaction mode
                                     do {
+
+
+                                        //reference variable to seat database
+
+                                        //updates to reference variable also updates the variable being referenced
+
+                                        //c++ notation: &seatList = Database_Of_Shows.get(dateTime) => &seatList = ArrayList<seat>
+
+
                                         System.out.println("[R]eserve\n" + "[V]iew\n" + "[C]ancel\n" + "[O]ut");
                                         input = br.readLine();
                                         switch (input) {
                                             case "R":
                                             case "r":
-                                                boolean reserving = true;
-                                                //enter date and time of desired show
-//                                                System.out.println("Enter a date and time: (input must follow date time format: 2010-01-23 10:30 )");
-                                                System.out.println("Enter a date : (input must follow the date format: `2020-01-23`) ");
-                                                String date = br.readLine();
-                                                System.out.println("Enter a time  : (input must follow the time format examples: `18:30`\t`01:15`) ");
-                                                String time = br.readLine();
-                                                String dateTime = date + " " + time;
-                                                if (Database_Of_Shows.containsKey(dateTime)) {
-                                                    ArrayList<seat> listOfSeats = Database_Of_Shows.get(dateTime);
-                                                    for (int i = 0; i < listOfSeats.size(); i++) {
-                                                        //ever 6 seats, print a new line
-                                                        if (i % 6 == 0) {
-                                                            System.out.println('\n');
-                                                        }
+                                                boolean reservingSeats = true;
+                                                ArrayList<seat> reservedSeats = new ArrayList<>();
 
-                                                        System.out.print("[" + i + "] " + listOfSeats.get(i) + "    ");
+                                                //create list of seat reservations
+//                                                ArrayList<seat> reservedSeats = new ArrayList<>();
+                                                //while user
+                                                String dateTime;
+                                                do {
+                                                    System.out.println("Enter a date : (input must follow the date format: `2020-01-23`) or press quit (q)");
+                                                    String date = br.readLine();
+                                                    if (date == "q") {
+                                                        reservingSeats = false;
                                                     }
-                                                    System.out.println("\n\n" + "Select one or more seats : (input for multiple seats should follow the following format: `0,1,2,3,4,5,[....],100`) \n");
+                                                    System.out.println("Enter a time  : (input must follow the time format examples: `18:30`\t`01:15`) or press quit (q) ");
+                                                    String time = br.readLine();
+                                                    if (time == "q") {
+                                                        reservingSeats = false;
+                                                    }
+                                                    dateTime = date + " " + time;
+                                                    ArrayList<seat> seatSelection = Database_Of_Shows.get(dateTime);
 
-                                                    boolean reservingSeats = true;
-                                                    ArrayList<seat> reservedSeats = new ArrayList<>();
+                                                    if (Database_Of_Shows.containsKey(dateTime)) {
 
-                                                    while (reservingSeats) {
-                                                        System.out.println("Enter in a number to select a seat or [Q] to quit");
-                                                        System.out.println(reservedSeats);
+
+                                                        //print current state of list of seats
+                                                        System.out.print("Seat Listing");
+                                                        for (int i = 0; i < seatSelection.size(); i++) {
+                                                            if (i % 6 == 0) {
+                                                                System.out.println('\n');
+                                                            }
+                                                            System.out.print("[" + i + "] " + seatSelection.get(i) + "    ");
+
+                                                        }
+                                                        System.out.println();
+
+                                                        System.out.println("Reserved Seats\n" + reservedSeats + "\n");
+
+                                                        System.out.println("Reserve a seat or press quit(-1 or q)");
+
                                                         input = br.readLine();
-                                                        if (input.equalsIgnoreCase("q")) {
+                                                        //if input q or -1, quit
+                                                        if (input.equalsIgnoreCase("q") || input.equals("-1")) {
                                                             reservingSeats = false;
-                                                        } else {
-                                                            if (Integer.parseInt(input) > listOfSeats.size() || Integer.parseInt(input) < 0) {
-                                                                System.out.println("Invalid Input");
-                                                                continue;
+                                                            //if entering "asdas", invalid input
+                                                        } else if (input.length() > 1) {
+                                                            System.out.println("Invalid Input");
+                                                            continue;
+
+                                                        } else if
+                                                            //if input string is a number, it is considered valid
+                                                        (input.matches("^[0-9]*$")) {
+
+                                                            int seatNum = Integer.parseInt(input);
+                                                            seat s = seatSelection.get(seatNum);
+                                                            s.setAvailable(false);
+                                                            if (!reservedSeats.contains(s)) {
+                                                                reservedSeats.add(s);
                                                             }
-
-
-                                                            if (reservedSeats.contains(listOfSeats.get(Integer.parseInt(input)))) {
-                                                                continue;
-                                                            } else {
-                                                                reservedSeats.add(listOfSeats.get(Integer.parseInt(input)));
-                                                            }
-
                                                         }
-
-
+                                                        //if input not a number and is a character that's not q or -1,  print invalid statement
+                                                        else {
+                                                            System.out.println("Invalid input");
+                                                            continue;
+                                                        }
                                                     }
-                                                    //pick choice
 
-                                                    //update show database
-//                                                    ArrayList<seat> reservedSeats = new ArrayList<>();
-//                                                    reservedSeats.add(listOfSeats.get(seatChoiceInt));
+                                                    System.out.println("Finished reservations!");
 
+                                                } while (reservingSeats);
+                                                user.addReservation(dateTime, reservedSeats);
 
-                                                }
                                                 break;
                                             case "V":
                                             case "v":
@@ -187,7 +225,10 @@ public class main {
                                                 System.out.println("Invalid input!");
                                                 break;
                                         }
+
+
                                     } while (transactionMode);
+
                                 }
                             }
                         }

@@ -11,6 +11,8 @@ public class customer {
     String password;
 
     //list of reservations
+
+    // key: show datetime, value = list of seats
     HashMap<String, List<seat>> reservations;
 
     public customer(String id, String password) {

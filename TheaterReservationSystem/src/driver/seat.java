@@ -48,7 +48,12 @@ public class seat {
 
     @Override
     public String toString() {
-        return seatLocation + seatNumber + ",$" + seatPrice;
+        if (isAvailable) {
+            return seatLocation + seatNumber + ",$" + seatPrice + " [ open ] ";
+
+        } else {
+            return seatLocation + seatNumber + ",$" + seatPrice + " [ reserved ] ";
+        }
     }
 
 
