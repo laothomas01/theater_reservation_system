@@ -9,7 +9,7 @@ public class customer {
     String userId;
     String password;
 
-    //reservations
+    //list of reservations
 
 
     public customer(String id, String password) {
