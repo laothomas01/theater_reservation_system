@@ -48,7 +48,7 @@ public class seat {
 
     @Override
     public String toString() {
-        return seatLocation + seatNumber + " $" + seatPrice;
+        return seatLocation + seatNumber + ",$" + seatPrice;
     }
 
 

@@ -13,16 +13,6 @@ import java.util.List;
 // The operating system of this application
 public class main {
     public static void main(String args[]) throws IOException {
-//        String filename = "helloworld.txt";
-//        File file = new File(filename);
-
-        //make sure to update global database of shows and their respective available seats
-
-        //initialize database of shows with show times and available seats
-        //populate when loading text files
-
-        //this list of seats should be a hashmap to make access to specific seats easier
-//        HashMap<String, ArrayList<seat>> DataBase_Of_Shows = new HashMap<>();
         HashMap<String, ArrayList<seat>> Database_Of_Shows = new HashMap<>();
         HashMap<String, customer> Database_Of_Signups = new HashMap<>();
         ArrayList<seat> seats = new ArrayList<>();
@@ -32,32 +22,35 @@ public class main {
 
         seats.add(new seat(1, "m", 35, true));
         seats.add(new seat(2, "m", 35, true));
+        seats.add(new seat(2, "m", 35, true));
+        seats.add(new seat(2, "m", 35, true));
+        seats.add(new seat(2, "m", 35, true));
+        seats.add(new seat(3, "m", 35, true));
+        seats.add(new seat(3, "m", 35, true));
+        seats.add(new seat(3, "m", 35, true));
+        seats.add(new seat(3, "m", 35, true));
         seats.add(new seat(3, "m", 35, true));
         seats.add(new seat(4, "m", 35, true));
         seats.add(new seat(101, "m", 45, true));
+        seats.add(new seat(101, "m", 45, true));
+        seats.add(new seat(101, "m", 45, true));
+        seats.add(new seat(101, "m", 45, true));
+        seats.add(new seat(101, "m", 45, true));
+        seats.add(new seat(101, "m", 45, true));
+        seats.add(new seat(101, "m", 45, true));
         //==========================================================
 
-        //======================= DATA TIME HANDLING ==============================================================
+        //======================= DATE TIME HANDLING ==============================================================
         LocalDateTime localDateTime1 = LocalDateTime.of(2020, Month.DECEMBER, 23, 18, 30);
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
         String formattedDateTimeString = localDateTime1.format(formatter);
         Database_Of_Shows.put(formattedDateTimeString, seats); // datetime, list of seats
-//        DataBase_Of_Shows.put(formattedDateTimeString, seats);
-//        System.out.println("Enter a date and time: (date time format example: 2010-01-23 10:30)");
-//        String line = input.readLine();
-//        if (line.equals(formattedDateTimeString)) {
-//            for (int i = 0; i < DataBase_Of_Shows.get(line).size(); i++) {
-//                System.out.println(DataBase_Of_Shows.get(line).get(i));
-//            }
-//        }
 
         //=============================================================================================================
 
 
         boolean run = true;
         String input;
-//        BufferedReader input = new BufferedReader(new InputStreamReader(System.in));
-//        String line;
 
         while (run) {
             System.out.println("Sign [U]p\n" + "Sign [I]n\n" + "E[X]it");
@@ -113,7 +106,7 @@ public class main {
                                 // transition to transaction mode
                                 if (Database_Of_Signups.get(username).getPassword().equals(password)) {
                                     System.out.println("Sign in successful");
-                                    //create a reference to the customer account
+                                    //create a reference to the customer account to persist made reservations
                                     customer user = Database_Of_Signups.get(input);
                                     // prompt reservation menu
                                     boolean transactionMode = true;
@@ -124,14 +117,59 @@ public class main {
                                         switch (input) {
                                             case "R":
                                             case "r":
+                                                boolean reserving = true;
                                                 //enter date and time of desired show
-                                                System.out.println("Enter a date and time: (input must follow date time format: 2010-01-23 10:30 )");
-                                                input = br.readLine();
-                                                if (Database_Of_Shows.containsKey(input)) {
-                                                    ArrayList<seat> listOfSeats = Database_Of_Shows.get(input);
+//                                                System.out.println("Enter a date and time: (input must follow date time format: 2010-01-23 10:30 )");
+                                                System.out.println("Enter a date : (input must follow the date format: `2020-01-23`) ");
+                                                String date = br.readLine();
+                                                System.out.println("Enter a time  : (input must follow the time format examples: `18:30`\t`01:15`) ");
+                                                String time = br.readLine();
+                                                String dateTime = date + " " + time;
+                                                if (Database_Of_Shows.containsKey(dateTime)) {
+                                                    ArrayList<seat> listOfSeats = Database_Of_Shows.get(dateTime);
                                                     for (int i = 0; i < listOfSeats.size(); i++) {
-                                                        System.out.println("[" + i + "] " + listOfSeats.get(i));
+                                                        //ever 6 seats, print a new line
+                                                        if (i % 6 == 0) {
+                                                            System.out.println('\n');
+                                                        }
+
+                                                        System.out.print("[" + i + "] " + listOfSeats.get(i) + "    ");
                                                     }
+                                                    System.out.println("\n\n" + "Select one or more seats : (input for multiple seats should follow the following format: `0,1,2,3,4,5,[....],100`) \n");
+
+                                                    boolean reservingSeats = true;
+                                                    ArrayList<seat> reservedSeats = new ArrayList<>();
+
+                                                    while (reservingSeats) {
+                                                        System.out.println("Enter in a number to select a seat or [Q] to quit");
+                                                        System.out.println(reservedSeats);
+                                                        input = br.readLine();
+                                                        if (input.equalsIgnoreCase("q")) {
+                                                            reservingSeats = false;
+                                                        } else {
+                                                            if (Integer.parseInt(input) > listOfSeats.size() || Integer.parseInt(input) < 0) {
+                                                                System.out.println("Invalid Input");
+                                                                continue;
+                                                            }
+
+
+                                                            if (reservedSeats.contains(listOfSeats.get(Integer.parseInt(input)))) {
+                                                                continue;
+                                                            } else {
+                                                                reservedSeats.add(listOfSeats.get(Integer.parseInt(input)));
+                                                            }
+
+                                                        }
+
+
+                                                    }
+                                                    //pick choice
+
+                                                    //update show database
+//                                                    ArrayList<seat> reservedSeats = new ArrayList<>();
+//                                                    reservedSeats.add(listOfSeats.get(seatChoiceInt));
+
+
                                                 }
                                                 break;
                                             case "V":
@@ -153,8 +191,7 @@ public class main {
                                 }
                             }
                         }
-                    }
-                    while (signingIn);
+                    } while (signingIn);
                     break;
 
 

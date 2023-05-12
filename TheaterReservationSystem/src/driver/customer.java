@@ -1,6 +1,7 @@
 package driver;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class customer {
@@ -10,10 +11,10 @@ public class customer {
     String password;
 
     //list of reservations
-
+    HashMap<String, List<seat>> reservations;
 
     public customer(String id, String password) {
-
+        reservations = new HashMap<>();
         this.userId = id;
         this.password = password;
     }
@@ -32,5 +33,13 @@ public class customer {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public HashMap<String, List<seat>> getReservations() {
+        return reservations;
+    }
+
+    public void addReservation(String dateTime, List<seat> seats) {
+        getReservations().put(dateTime, seats);
     }
 }
