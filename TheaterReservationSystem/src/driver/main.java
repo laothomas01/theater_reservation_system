@@ -133,6 +133,7 @@ public class main {
                                         //c++ notation: &seatList = Database_Of_Shows.get(dateTime) => &seatList = ArrayList<seat>
 
 
+                                        //====================== TRANSACTION SELECTION =========================
                                         System.out.println("[R]eserve\n" + "[V]iew\n" + "[C]ancel\n" + "[O]ut");
                                         input = br.readLine();
                                         switch (input) {
@@ -145,6 +146,8 @@ public class main {
 //                                                ArrayList<seat> reservedSeats = new ArrayList<>();
                                                 //while user
                                                 String dateTime = "";
+
+                                                //================= SEAT REVERSATION ===========================
                                                 do {
 
 
@@ -209,16 +212,23 @@ public class main {
 
 
                                                 } while (pickingShowTime);
-                                                System.out.println(user);
-//                                                if (dateTime.equals(null)) {
-//
-//                                                }
-
+//                                                System.out.println(user.getReservations());
+                                                user.getReservations().put(dateTime, reservedSeats);
+//                                                System.out.println(user.getReservations());
                                                 break;
+
+
                                             case "V":
                                             case "v":
+
+                                                //======================== RESERVATION VIEWING ================================
                                                 boolean viewingReservations = true;
-                                                System.out.println(user.getReservations());
+                                                for (String key : user.getReservations().keySet()) {
+                                                    for (seat s : user.getReservations().get(key)) {
+                                                        System.out.println(key + " | " + s);
+                                                    }
+                                                    System.out.println();
+                                                }
                                                 break;
                                             case "C":
                                             case "c":
@@ -235,11 +245,15 @@ public class main {
 
 
                                     } while (transactionMode);
-                                    System.out.println(user);
+
                                 }
+
                             }
+
                         }
                     } while (signingIn);
+                    // ============================= USER HAS LOGGED OUT ====================================
+
                     break;
 
 
