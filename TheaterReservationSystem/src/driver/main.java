@@ -117,7 +117,7 @@ public class main {
                                     //create a reference variable to the customer object stored inside signed up user database
 
                                     //data will persist inside data structure until end of program
-                                    customer user = Database_Of_Signups.get(input);
+                                    customer user = Database_Of_Signups.get(username);
 
                                     // prompt reservation menu
                                     boolean transactionMode = true;
@@ -138,80 +138,87 @@ public class main {
                                         switch (input) {
                                             case "R":
                                             case "r":
-                                                boolean reservingSeats = true;
+                                                boolean pickingShowTime = true;
                                                 ArrayList<seat> reservedSeats = new ArrayList<>();
 
                                                 //create list of seat reservations
 //                                                ArrayList<seat> reservedSeats = new ArrayList<>();
                                                 //while user
-                                                String dateTime;
+                                                String dateTime = "";
                                                 do {
+
+
+                                                    //@TODO show available show times to make date entering easier
+
                                                     System.out.println("Enter a date : (input must follow the date format: `2020-01-23`) or press quit (q)");
                                                     String date = br.readLine();
-                                                    if (date == "q") {
-                                                        reservingSeats = false;
+                                                    if (date.equalsIgnoreCase("q")) {
+                                                        break;
                                                     }
                                                     System.out.println("Enter a time  : (input must follow the time format examples: `18:30`\t`01:15`) or press quit (q) ");
                                                     String time = br.readLine();
-                                                    if (time == "q") {
-                                                        reservingSeats = false;
+                                                    if (time.equalsIgnoreCase("q")) {
+                                                        break;
                                                     }
                                                     dateTime = date + " " + time;
                                                     ArrayList<seat> seatSelection = Database_Of_Shows.get(dateTime);
 
                                                     if (Database_Of_Shows.containsKey(dateTime)) {
 
+                                                        boolean reservingSeats = true;
+                                                        do {
+                                                            //print current state of list of seats
+                                                            System.out.print("Seat Listings\n=====================================================");
+                                                            for (int i = 0; i < seatSelection.size(); i++) {
+                                                                if (i % 6 == 0) {
+                                                                    System.out.println('\n');
+                                                                }
+                                                                System.out.print("[" + i + "] " + seatSelection.get(i) + "   ");
 
-                                                        //print current state of list of seats
-                                                        System.out.print("Seat Listing");
-                                                        for (int i = 0; i < seatSelection.size(); i++) {
-                                                            if (i % 6 == 0) {
-                                                                System.out.println('\n');
                                                             }
-                                                            System.out.print("[" + i + "] " + seatSelection.get(i) + "    ");
+                                                            System.out.println("\n=====================================================");
 
-                                                        }
-                                                        System.out.println();
+                                                            System.out.println("Reserved Seats\n" + reservedSeats + "\n");
+                                                            System.out.println("=====================================================");
+                                                            System.out.println("Reserve a seat or press quit(-1 or q)");
 
-                                                        System.out.println("Reserved Seats\n" + reservedSeats + "\n");
+                                                            input = br.readLine();
+                                                            //if input q or -1, quit
+                                                            if (input.equalsIgnoreCase("q") || input.equals("-1")) {
+                                                                reservingSeats = false;
+                                                                //if entering "asdas", invalid input
+                                                            } else if (input.length() > 1) {
+                                                                System.out.println("Invalid Input");
+                                                                continue;
 
-                                                        System.out.println("Reserve a seat or press quit(-1 or q)");
-
-                                                        input = br.readLine();
-                                                        //if input q or -1, quit
-                                                        if (input.equalsIgnoreCase("q") || input.equals("-1")) {
-                                                            reservingSeats = false;
-                                                            //if entering "asdas", invalid input
-                                                        } else if (input.length() > 1) {
-                                                            System.out.println("Invalid Input");
-                                                            continue;
-
-                                                        } else if
-                                                            //if input string is a number, it is considered valid
-                                                        (input.matches("^[0-9]*$")) {
-
-                                                            int seatNum = Integer.parseInt(input);
-                                                            seat s = seatSelection.get(seatNum);
-                                                            s.setAvailable(false);
-                                                            if (!reservedSeats.contains(s)) {
+                                                            } else if (input.matches("^[0-9]*$") && !input.equals("")) //if input string is a number, it is considered valid
+                                                            {
+                                                                int seatNum = Integer.parseInt(input);
+                                                                seat s = seatSelection.get(seatNum);
+                                                                s.setAvailable(false);
                                                                 reservedSeats.add(s);
                                                             }
-                                                        }
-                                                        //if input not a number and is a character that's not q or -1,  print invalid statement
-                                                        else {
-                                                            System.out.println("Invalid input");
-                                                            continue;
-                                                        }
+                                                            //if input not a number and is a character that's not q or -1,  print invalid statement
+                                                            else {
+                                                                System.out.println("Invalid input");
+                                                                continue;
+                                                            }
+                                                        } while (reservingSeats);
+
                                                     }
 
-                                                    System.out.println("Finished reservations!");
 
-                                                } while (reservingSeats);
-                                                user.addReservation(dateTime, reservedSeats);
+                                                } while (pickingShowTime);
+                                                System.out.println(user);
+//                                                if (dateTime.equals(null)) {
+//
+//                                                }
 
                                                 break;
                                             case "V":
                                             case "v":
+                                                boolean viewingReservations = true;
+                                                System.out.println(user.getReservations());
                                                 break;
                                             case "C":
                                             case "c":
@@ -228,7 +235,7 @@ public class main {
 
 
                                     } while (transactionMode);
-
+                                    System.out.println(user);
                                 }
                             }
                         }

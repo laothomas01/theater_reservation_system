@@ -44,4 +44,8 @@ public class customer {
     public void addReservation(String dateTime, List<seat> seats) {
         getReservations().put(dateTime, seats);
     }
+
+    public String toString() {
+        return getUserId() + " " + getPassword() + " ";
+    }
 }
