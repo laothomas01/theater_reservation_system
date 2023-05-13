@@ -13,7 +13,9 @@ public class customer {
     //list of reservations
 
     // key: show datetime, value = list of seats
-    HashMap<String, List<seat>> reservations;
+
+    //@TODO turn into a hashmap of <hashmap<time,date>, <list<seat>>
+    HashMap<String, ArrayList<seat>> reservations;
 
     public customer(String id, String password) {
         reservations = new HashMap<>();
@@ -37,11 +39,12 @@ public class customer {
         this.password = password;
     }
 
-    public HashMap<String, List<seat>> getReservations() {
+
+    public HashMap<String, ArrayList<seat>> getReservations() {
         return reservations;
     }
 
-    public void addReservation(String dateTime, List<seat> seats) {
+    public void addReservation(String dateTime, ArrayList<seat> seats) {
         getReservations().put(dateTime, seats);
     }
 

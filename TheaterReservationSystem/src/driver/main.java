@@ -9,8 +9,19 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 // The operating system of this application
+
+/*
+ *
+ *
+ * bugs:
+ * [] checking double digit user inputs
+ *
+ *
+ * */
 public class main {
     public static void main(String args[]) throws IOException {
         HashMap<String, ArrayList<seat>> Database_Of_Shows = new HashMap<>();
@@ -139,7 +150,7 @@ public class main {
                                         switch (input) {
                                             case "R":
                                             case "r":
-                                                boolean pickingShowTime = true;
+                                                boolean reservingShowTime = true;
                                                 ArrayList<seat> reservedSeats = new ArrayList<>();
 
                                                 //create list of seat reservations
@@ -211,7 +222,7 @@ public class main {
                                                     }
 
 
-                                                } while (pickingShowTime);
+                                                } while (reservingShowTime);
 //                                                System.out.println(user.getReservations());
                                                 user.getReservations().put(dateTime, reservedSeats);
 //                                                System.out.println(user.getReservations());
@@ -232,6 +243,55 @@ public class main {
                                                 break;
                                             case "C":
                                             case "c":
+                                                //@TODO enter date, time of the show. display all seat numbers
+                                                boolean cancelingReservatitions = true;
+                                                do {
+                                                    System.out.println("Enter a date : (input must follow the date format: `2020-01-23`) or press quit (q)");
+                                                    String date = br.readLine();
+                                                    if (date.equalsIgnoreCase("q")) {
+                                                        break;
+                                                    }
+                                                    System.out.println("Enter a time  : (input must follow the time format examples: `18:30`\t`01:15`) or press quit (q) ");
+                                                    String time = br.readLine();
+                                                    if (time.equalsIgnoreCase("q")) {
+                                                        break;
+                                                    }
+                                                    dateTime = date + " " + time;
+                                                    if (Database_Of_Shows.containsKey(dateTime)) {
+                                                        List<seat> reservations = user.getReservations().get("2020-12-23 18:30");
+                                                        boolean selectingToCancel = true;
+                                                        do {
+                                                            System.out.println("Enter a number to cancel a seat or press quit(-1 or q)");
+
+                                                            for (int i = 0; i < reservations.size(); i++) {
+                                                                System.out.println("[" + i + "]" + dateTime + "|" + reservations.get(i).getSeatNumber());
+                                                            }
+                                                            input = br.readLine();
+
+                                                            if (input.equalsIgnoreCase("q") || input.equals("-1")) {
+                                                                selectingToCancel = false;
+                                                                //if entering "asdas", invalid input
+                                                            } else if (input.length() > 1) {
+                                                                System.out.println("Invalid Input");
+                                                                continue;
+
+                                                            } else if (input.matches("^[0-9]*$") && !input.equals("")) //if input string is a number, it is considered valid
+                                                            {
+                                                                reservations.remove(Integer.parseInt(input));
+                                                            }
+                                                            //if input not a number and is a character that's not q or -1,  print invalid statement
+                                                            else {
+                                                                System.out.println("Invalid input");
+                                                                continue;
+                                                            }
+
+//                                                            reservations.remove(Integer.parseInt(input));
+                                                        } while (selectingToCancel);
+
+                                                    } else {
+                                                        System.out.println("Cannot find reservation");
+                                                    }
+                                                } while (cancelingReservatitions);
                                                 break;
                                             case "O":
                                             case "o":
@@ -359,6 +419,32 @@ public class main {
 //
 //
     }
+
+    public static boolean
+    onlyDigits(String str) {
+        // Regex to check string
+        // contains only digits
+        String regex = "[0-9]+";
+
+        // Compile the ReGex
+        Pattern p = Pattern.compile(regex);
+
+        // If the string is empty
+        // return false
+        if (str == null) {
+            return false;
+        }
+
+        // Find match between given string
+        // and regular expression
+        // using Pattern.matcher()
+        Matcher m = p.matcher(str);
+
+        // Return if the string
+        // matched the ReGex
+        return m.matches();
+    }
+
 }
 
 
