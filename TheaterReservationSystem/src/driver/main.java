@@ -354,6 +354,20 @@ public class main {
 //                    With this option, the system
 //                    copies the valid reservations of all registered users from the in-memory data structure to a
 //                    file called 'reservations.txt'.
+                    if (!Database_Of_Signups.isEmpty()) {
+                        for (String username : Database_Of_Signups.keySet()) {
+                            System.out.println(username + ":");
+                            if (!Database_Of_Signups.get(username).getReservations().isEmpty()) {
+                                for (String showTimeReservation : Database_Of_Signups.get(username).getReservations().keySet()) {
+                                    System.out.println(showTimeReservation + ":");
+                                    for (seat s : Database_Of_Signups.get(username).getReservations().get(showTimeReservation)) {
+                                        System.out.println(s.getSeatLocation() + s.getSeatNumber() + " $" + s.getSeatPrice());
+                                    }
+                                }
+                            }
+                        }
+                    }
+
                     System.out.println("=======================EXIT!=======================");
                     run = false;
                     break;
