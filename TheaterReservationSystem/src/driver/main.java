@@ -5,10 +5,7 @@ import java.time.LocalDateTime;
 import java.time.Month;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Hashtable;
-import java.util.List;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -26,6 +23,7 @@ public class main {
     public static void main(String args[]) throws IOException {
         HashMap<String, ArrayList<seat>> Database_Of_Shows = new HashMap<>();
         HashMap<String, customer> Database_Of_Signups = new HashMap<>();
+        HashMap<String, HashMap<String, ArrayList<seat>>> transactionHistory = new HashMap<>();
         ArrayList<seat> seats = new ArrayList<>();
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
@@ -136,7 +134,6 @@ public class main {
                                     //start transaction mode
                                     do {
 
-
                                         //reference variable to seat database
 
                                         //updates to reference variable also updates the variable being referenced
@@ -188,8 +185,10 @@ public class main {
                                                                 }
                                                                 System.out.print("[" + i + "] " + seatDB.get(i) + "   ");
                                                             }
+                                                            System.out.print("======================================================");
 
-                                                            System.out.println("\nCurrent Reservations:" + reservedSeats);
+
+                                                            System.out.println("\n\nCurrent Reservations:" + reservedSeats);
 
                                                             System.out.println("Reserve a seat or press quit(-1 or q)");
                                                             input = br.readLine();
@@ -199,6 +198,10 @@ public class main {
                                                             } else if (onlyDigits(input)) //if input string is a number, it is considered valid
                                                             {
                                                                 int seatNum = Integer.parseInt(input);
+                                                                if (seatNum < -1 || seatNum > seatDB.size()) {
+                                                                    System.out.println("Seat does not exist!");
+                                                                    continue;
+                                                                }
                                                                 if (seatDB.get(seatNum).isAvailable()) {
                                                                     seatDB.get(seatNum).setAvailable(false);
                                                                     reservedSeats.add(seatDB.get(seatNum));
@@ -255,57 +258,66 @@ public class main {
                                                     }
                                                     dateTime = date + " " + time;
                                                     System.out.println(dateTime);
-                                                    if (Database_Of_Shows.containsKey(dateTime)) {
-
-
+                                                    if (Database_Of_Shows.containsKey(dateTime) && user.getReservations().containsKey(dateTime)) {
                                                         //forgetting to check if user even has a reservation
-                                                        if (user.getReservations().containsKey(dateTime)) {
-                                                            List<seat> reservations = user.getReservations().get(dateTime);
-                                                            boolean selectingToCancel = true;
-                                                            do {
-                                                                System.out.println("Enter a number to cancel a seat or press quit(-1 or q)");
+                                                        boolean selectingToCancel = true;
+                                                        List<seat> reservations = user.getReservations().get(dateTime);
+                                                        do {
+                                                            System.out.println("Enter a number to cancel a seat or press quit(-1 or q)");
 
-                                                                for (int i = 0; i < reservations.size(); i++) {
-                                                                    System.out.println("[" + i + "]" + dateTime + "|" + reservations.get(i).getSeatNumber());
-                                                                }
-                                                                input = br.readLine();
+                                                            for (int i = 0; i < reservations.size(); i++) {
+                                                                System.out.println("[" + i + "]" + dateTime + "|" + reservations.get(i).getSeatNumber());
+                                                            }
+                                                            input = br.readLine();
 
-                                                                if (input.equalsIgnoreCase("q") || input.equals("-1")) {
-                                                                    selectingToCancel = false;
-                                                                    //if entering "asdas", invalid input
-                                                                } else if (onlyDigits(input)) {
-                                                                    if (!reservations.isEmpty()) {
-                                                                        int seatNum = Integer.parseInt(input);
-                                                                        reservations.remove(seatNum);
-                                                                    } else {
-                                                                        System.out.println("You have no reservations!");
-                                                                    }
+                                                            if (input.equalsIgnoreCase("q") || input.equals("-1")) {
+                                                                selectingToCancel = false;
+                                                                //if entering "asdas", invalid input
+                                                            } else if (onlyDigits(input)) {
+                                                                if (!reservations.isEmpty()) {
+                                                                    int seatNum = Integer.parseInt(input);
+                                                                    reservations.remove(seatNum);
+                                                                } else {
+                                                                    System.out.println("You have no reservations!");
+                                                                }
 
-                                                                }
-                                                                //if input not a number and is a character that's not q or -1,  print invalid statement
-                                                                else {
-                                                                    System.out.println("Invalid input");
-                                                                    continue;
-                                                                }
+                                                            }
+                                                            //if input not a number and is a character that's not q or -1,  print invalid statement
+                                                            else {
+                                                                System.out.println("Invalid input");
+                                                                continue;
+                                                            }
 
 //                                                            reservations.remove(Integer.parseInt(input));
-                                                            } while (selectingToCancel);
-                                                        } else {
-                                                            System.out.println("User reservation does not exist");
-                                                        }
-
-
+                                                        } while (selectingToCancel);
+                                                    } else {
+                                                        System.out.println("User reservation does not exist");
                                                     }
 
-//                                                    else {
-//                                                        System.out.println("Cannot find reservation");
-//                                                    }
+
                                                 } while (cancelingReservations);
                                                 break;
                                             case "O":
                                             case "o":
+                                                //@TODO: display all reserved shows and organize by date and then time
+                                                //check user's reservations by looking at keysets and mapping those keys to their values
+                                                if (!user.getReservations().isEmpty()) {
+                                                    System.out.println("Confirmation Number " + createRandNums());
+//                                                System.out.println(user.getReservations().get(da));
+                                                    for (String key : user.getReservations().keySet()) {
+                                                        System.out.print(key + "\n==============================================================\n");
+                                                        for (seat s : user.getReservations().get(key)) {
+                                                            System.out.println(s.getSeatLocation() + s.getSeatNumber() + "\t$" + s.getSeatPrice());
+                                                        }
+                                                    }
+                                                    System.out.print("==============================================================\n");
+
+                                                } else {
+                                                    System.out.println("You have no reservations");
+                                                }
+                                                System.out.println("================== Successfully Logged Out ==================");
                                                 transactionMode = false;
-                                                signingIn = false;
+
                                                 break;
                                             default:
                                                 System.out.println("Invalid input!");
@@ -339,6 +351,9 @@ public class main {
                  * */
                 case "x":
                 case "X":
+//                    With this option, the system
+//                    copies the valid reservations of all registered users from the in-memory data structure to a
+//                    file called 'reservations.txt'.
                     System.out.println("=======================EXIT!=======================");
                     run = false;
                     break;
@@ -372,6 +387,22 @@ public class main {
         // Return if the string
         // matched the ReGex
         return m.matches();
+    }
+
+    public static String createRandNums() {
+        final Random rnd = new Random();
+        final int N = 100;
+        final int K = 5;
+        final ArrayList<Integer> S = new ArrayList<>(N);
+        for (int i = 0; i < N; i++) {
+            S.add(i + 1);
+        }
+        Collections.shuffle(S, rnd);
+        String result = "";
+        for (int i = 0; i < K; i++) {
+            result += S.get(i).toString();
+        }
+        return result;
     }
 
     public static void runApp() throws IOException {
