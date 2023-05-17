@@ -1,5 +1,5 @@
 # theater_reservation_system
-
+```
 --------------------------
 | Miracle on 34th Street |
 --------------------------
@@ -209,3 +209,5 @@ Enter a time  : (input must follow the time format examples: `18:30`	`01:15`) or
 [93]  	m94,$35.0 [ open ] 	
 [94]  	m95,$35.0 [ open ] 	
 [95]  	m96,$35.0 [ open ] 	
+
+```
