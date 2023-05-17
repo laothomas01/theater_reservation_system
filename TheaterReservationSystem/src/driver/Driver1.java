@@ -1,6 +1,5 @@
 package driver;
 
-import java.io.*;
 import java.time.LocalDateTime;
 import java.time.Month;
 import java.time.format.DateTimeFormatter;
@@ -19,7 +18,7 @@ import java.util.regex.Pattern;
  *
  *
  * */
-public class main {
+public class Driver1 {
 
     //temporarily commented out
 //    public static void main(String args[]) throws IOException {

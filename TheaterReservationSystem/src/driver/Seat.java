@@ -1,13 +1,13 @@
 package driver;
 
-public class seat {
+public class Seat {
 
     int seatNumber;
     String seatLocation;
     double seatPrice;
     boolean isAvailable;
 
-    public seat(int num, String name, double price, boolean availability) {
+    public Seat(int num, String name, double price, boolean availability) {
         seatNumber = num;
         seatLocation = name;
         seatPrice = price;

@@ -2,9 +2,9 @@ package driver;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
+import java.util.LinkedHashMap;
 
-public class customer {
+public class Customer {
 
 
     String userId;
@@ -15,10 +15,10 @@ public class customer {
     // key: show datetime, value = list of seats
 
     //@TODO turn into a hashmap of <hashmap<time,date>, <list<seat>>
-    HashMap<String, ArrayList<seat>> reservations;
+    LinkedHashMap<String, ArrayList<Seat>> showReservations;
 
-    public customer(String id, String password) {
-        reservations = new HashMap<>();
+    public Customer(String id, String password) {
+        showReservations = new LinkedHashMap<>();
         this.userId = id;
         this.password = password;
     }
@@ -40,12 +40,12 @@ public class customer {
     }
 
 
-    public HashMap<String, ArrayList<seat>> getReservations() {
-        return reservations;
+    public HashMap<String, ArrayList<Seat>> getShowReservations() {
+        return showReservations;
     }
 
-    public void addReservation(String dateTime, ArrayList<seat> seats) {
-        getReservations().put(dateTime, seats);
+    public void addReservation(String dateTime, ArrayList<Seat> seats) {
+        getShowReservations().put(dateTime, seats);
     }
 
     public String toString() {
