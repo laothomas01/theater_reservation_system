@@ -8,6 +8,13 @@ import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+
+/*
+ *
+ *
+ * MONOLITHIC DOGSHIT
+ *
+ * */
 // The operating system of this application
 
 /*

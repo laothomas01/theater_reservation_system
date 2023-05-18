@@ -22,6 +22,13 @@ import java.util.regex.Pattern;
  * */
 
 
+/*
+*
+* MODULAR DOGSHIT!
+*
+*
+* */
+
 public class Driver2 {
 
     private static LinkedHashMap<String, ArrayList<Seat>> Database_Of_Shows = new LinkedHashMap<>();
@@ -39,7 +46,7 @@ public class Driver2 {
     }
 
 
-    public static void generateShows(LocalDateTime startDate, LocalDateTime endDate) {
+    private static void generateShows(LocalDateTime startDate, LocalDateTime endDate) {
 
 
         DateTimeFormatter formattedDateTimeString = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
@@ -590,7 +597,7 @@ o East Balconies: $40 (eb1-wb100)
 //
 //    }
 
-    public static boolean onlyDigits(String str) {
+    private static boolean onlyDigits(String str) {
         // Regex to check string
         // contains only digits
         String regex = "[0-9]+";
@@ -613,7 +620,7 @@ o East Balconies: $40 (eb1-wb100)
         return m.matches();
     }
 
-    public static String createRandNums() {
+    private static String createRandNums() {
         final Random rnd = new Random();
         final int N = 100;
         final int K = 5;
@@ -644,7 +651,7 @@ o East Balconies: $40 (eb1-wb100)
         printBorder(borderLength);
     }
 
-    public static void printBorder(int length) {
+    private static void printBorder(int length) {
         for (int i = 0; i < length; i++) {
             System.out.print("-");
         }
@@ -665,6 +672,8 @@ o East Balconies: $40 (eb1-wb100)
             } else if (input.equalsIgnoreCase("i")) {
                 signIn(br);
             } else if (input.equalsIgnoreCase("x")) {
+
+                //write all internal database data to a .txt file called "reservations.txt"
                 System.out.println("Good bye");
                 break;
             } else {
@@ -699,6 +708,10 @@ o East Balconies: $40 (eb1-wb100)
         } while (!input.equalsIgnoreCase("b"));
     }
 
+
+    //what do i want out of this when it finishes?
+
+    //when this function finishes, you sign out
     private static void signIn(BufferedReader br) throws IOException {
         String input;
         printNiceMessage("Sign In");
@@ -706,6 +719,7 @@ o East Balconies: $40 (eb1-wb100)
             System.out.println("[E]nter Login\n[B]ack");
             input = br.readLine();
             if (input.equalsIgnoreCase("b")) {
+
                 break;
             } else if (input.equalsIgnoreCase("e")) {
                 System.out.println("Enter a username");
@@ -717,7 +731,7 @@ o East Balconies: $40 (eb1-wb100)
                     //reference variable to signed up user
                     Customer c = Database_Of_Signups.get(username);
                     if (password.equals(c.getPassword())) {
-                        transactionSession(br);
+                        transactionSession(br, c);
                     }
                 } else {
                     System.out.println("User does not exist");
@@ -726,11 +740,11 @@ o East Balconies: $40 (eb1-wb100)
                 System.out.println("Invalid Input!");
             }
 
-        } while (!input.equalsIgnoreCase("b"));
+        } while (true);
 
     }
 
-    private static void transactionSession(BufferedReader br) throws IOException {
+    private static void transactionSession(BufferedReader br, Customer c) throws IOException {
         String input;
         printNiceMessage("Transaction Mode");
         do {
@@ -738,58 +752,95 @@ o East Balconies: $40 (eb1-wb100)
             input = br.readLine();
             if (input.equalsIgnoreCase("r")) {
                 //begin reservation session
-                reservationSession(br);
             } else if (input.equalsIgnoreCase("v")) {
 
                 //list user reservations
 
             } else if (input.equalsIgnoreCase("c")) {
                 //begin cancellation session
-            }
-            if (input.equalsIgnoreCase("o")) {
+            } else if (input.equalsIgnoreCase("o")) {
                 break;
             } else {
                 System.out.println("Invalid Input!");
             }
-        }
-        while (!input.equalsIgnoreCase("o"));
+        } while (true);
     }
 
-    private static void reservationSession(BufferedReader br) throws IOException {
-        String date;
-        String time;
-        ArrayList<Seat> reservedSeats = new ArrayList<>();
+    private static void reservationSession(BufferedReader br, ArrayList<Seat> reservations) throws IOException {
+        String dateTime;
         printNiceMessage("Reservation Session");
         System.out.println("==================");
         for (String key : Database_Of_Shows.keySet()) {
-
             System.out.println("|" + key + "|");
         }
         System.out.println("==================");
         do {
-
-            System.out.println("Enter a date : (input must follow the date format: `2020-01-23`) or press quit (q)");
-            date = br.readLine();
-            if (date.equalsIgnoreCase("q")) {
+            System.out.println("Enter a date and time : (input must follow the date format: `2020-01-23 18:30`) or press quit (q)");
+            dateTime = br.readLine();
+            if (dateTime.equalsIgnoreCase("q")) {
                 break;
             }
-            System.out.println("Enter a time  : (input must follow the time format examples: `18:30`\t`01:15`) or press quit (q) ");
-            time = br.readLine();
-            if (time.equalsIgnoreCase("q")) {
-                break;
+            if (Database_Of_Shows.containsKey(dateTime)) {
+                ArrayList<Seat> seatListReference = Database_Of_Shows.get(dateTime);
+                do {
+                    printNiceMessage("Seat Selection");
+                    for (Seat s : seatListReference) {
+                        System.out.println(s.toString());
+                    }
+                    printNiceMessage("User Reservations");
+                    for (Seat s : reservations) {
+                        System.out.println(s.toString());
+                    }
+                    int seatNum = Integer.parseInt(br.readLine());
+                    if (seatNum < 0 || seatNum >= seatListReference.size()) {
+                        System.out.println("Does not exist");
+                    } else {
+                        Seat s = seatListReference.get(seatNum);
+                        s.setAvailable(false);
+                        reservations.add(s);
+                    }
+                } while (true);
+            } else {
+                System.out.println("Does not exist!");
             }
+//                String dateTime = date + " " + time;
+//                ArrayList<Seat> seatListReference = Database_Of_Shows.get(dateTime);
+//                do {
+//                    printNiceMessage("Seats");
+//                    for (int i = 0; i < seatListReference.size(); i++) {
+//                        if (i % 6 == 0) {
+//                            System.out.println();
+//                        } else {
+//                            System.out.print("[" + i + "]  \t" + Database_Of_Shows.get(dateTime).get(i) + "\t\n");
+//                        }
+//                    }
+//                    printNiceMessage("Reservations");
+//                    for (Seat s : reservedSeats) {
+//                        System.out.println(s.toString());
+//                    }
+//                    System.out.println("Enter a seat number or press quit (q) ");
+//                    String input = br.readLine();
+//                    if (input.equalsIgnoreCase("q")) {
+//                        break;
+//                    } else if (onlyDigits(input)) {
+//                        int seatNum = Integer.parseInt(input);
+//                        Seat s = seatListReference.get(seatNum);
+//                        if (s.isAvailable()) {
+//                            s.setAvailable(false);
+//                            reservedSeats.add(s);
+//                        } else {
+//                            System.out.println("");
+//                        }
+//                    } else {
+//                        System.out.println("Invalid input");
+//                    }
+//                }
+//                while (true);
 
-            String dateTime = date + " " + time;
-            for (int i = 0; i < Database_Of_Shows.get(dateTime).size(); i++) {
-                if (i % 6 == 0) {
-                    System.out.println();
-                } else {
-                    System.out.print("[" + i + "]  \t" + Database_Of_Shows.get(dateTime).get(i) + "\t\n");
-                }
-            }
             // take user input for reserving a seat
-        } while (!date.equalsIgnoreCase("q") || !time.equalsIgnoreCase("q"));
+        } while (true);
     }
+
 
 }
 
