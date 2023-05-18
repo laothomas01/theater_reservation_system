@@ -23,11 +23,11 @@ import java.util.regex.Pattern;
 
 
 /*
-*
-* MODULAR DOGSHIT!
-*
-*
-* */
+ *
+ * MODULAR DOGSHIT!
+ *
+ *
+ * */
 
 public class Driver2 {
 
@@ -715,11 +715,11 @@ o East Balconies: $40 (eb1-wb100)
     private static void signIn(BufferedReader br) throws IOException {
         String input;
         printNiceMessage("Sign In");
+        Customer c;
         do {
             System.out.println("[E]nter Login\n[B]ack");
             input = br.readLine();
             if (input.equalsIgnoreCase("b")) {
-
                 break;
             } else if (input.equalsIgnoreCase("e")) {
                 System.out.println("Enter a username");
@@ -729,10 +729,11 @@ o East Balconies: $40 (eb1-wb100)
                 if (Database_Of_Signups.containsKey(username)) {
                     // begin reservation session
                     //reference variable to signed up user
-                    Customer c = Database_Of_Signups.get(username);
+                    c = Database_Of_Signups.get(username);
                     if (password.equals(c.getPassword())) {
                         transactionSession(br, c);
                     }
+                    System.out.println("Hello World");
                 } else {
                     System.out.println("User does not exist");
                 }
@@ -785,7 +786,27 @@ o East Balconies: $40 (eb1-wb100)
                 do {
                     printNiceMessage("Seat Selection");
                     for (Seat s : seatListReference) {
-                        System.out.println(s.toString());
+                        System.out.println(s.toString());  printNiceMessage("Main Menu");
+//        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+
+        do {
+            System.out.println("Sign [U]p\n" + "Sign [I]n\n" + "E[X]it");
+
+            if (br.readLine().equalsIgnoreCase("u")) {
+                signUp(br);
+            } else if (br.readLine().equalsIgnoreCase("i")) {
+                signIn(br);
+            } else if (br.readLine().equalsIgnoreCase("x")) {
+                //write all internal database data to a .txt file called "reservations.txt"
+
+                //iterate through all signed up users and persist their data onto a .txt file
+                System.out.println("Good bye");
+                break;
+            } else {
+                System.out.println("Invalid Input!");
+            }
+
+        } while (true);
                     }
                     printNiceMessage("User Reservations");
                     for (Seat s : reservations) {
