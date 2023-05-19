@@ -40,7 +40,7 @@ public class Customer {
     }
 
 
-    public HashMap<String, ArrayList<Seat>> getShowReservations() {
+    public LinkedHashMap<String, ArrayList<Seat>> getShowReservations() {
         return showReservations;
     }
 
