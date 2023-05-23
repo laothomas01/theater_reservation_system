@@ -14,20 +14,10 @@ import java.util.regex.Pattern;
 
 /*
  *
- *
- * bugs:
- * [] checking double digit user inputs
- *
+ * trying to clean up the monolithic approach
  *
  * */
 
-
-/*
- *
- * MODULAR DOGSHIT!
- *
- *
- * */
 
 public class Driver2 {
 
@@ -786,27 +776,28 @@ o East Balconies: $40 (eb1-wb100)
                 do {
                     printNiceMessage("Seat Selection");
                     for (Seat s : seatListReference) {
-                        System.out.println(s.toString());  printNiceMessage("Main Menu");
+                        System.out.println(s.toString());
+                        printNiceMessage("Main Menu");
 //        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
-        do {
-            System.out.println("Sign [U]p\n" + "Sign [I]n\n" + "E[X]it");
+                        do {
+                            System.out.println("Sign [U]p\n" + "Sign [I]n\n" + "E[X]it");
 
-            if (br.readLine().equalsIgnoreCase("u")) {
-                signUp(br);
-            } else if (br.readLine().equalsIgnoreCase("i")) {
-                signIn(br);
-            } else if (br.readLine().equalsIgnoreCase("x")) {
-                //write all internal database data to a .txt file called "reservations.txt"
+                            if (br.readLine().equalsIgnoreCase("u")) {
+                                signUp(br);
+                            } else if (br.readLine().equalsIgnoreCase("i")) {
+                                signIn(br);
+                            } else if (br.readLine().equalsIgnoreCase("x")) {
+                                //write all internal database data to a .txt file called "reservations.txt"
 
-                //iterate through all signed up users and persist their data onto a .txt file
-                System.out.println("Good bye");
-                break;
-            } else {
-                System.out.println("Invalid Input!");
-            }
+                                //iterate through all signed up users and persist their data onto a .txt file
+                                System.out.println("Good bye");
+                                break;
+                            } else {
+                                System.out.println("Invalid Input!");
+                            }
 
-        } while (true);
+                        } while (true);
                     }
                     printNiceMessage("User Reservations");
                     for (Seat s : reservations) {

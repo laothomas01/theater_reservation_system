@@ -15,26 +15,25 @@ public class Driver3 {
     private static LinkedHashMap<String, ArrayList<Seat>> Database_Of_Shows = new LinkedHashMap<>();
     private static HashMap<String, Customer> Database_Of_Signups = new HashMap<>();
 
-    public static void initializeDatabase() {
+
+    //populate global database of shows user can access
+    public static void initializeShowDatabase() {
         LocalDateTime startDate_6_30 = LocalDateTime.of(2020, Month.DECEMBER, 23, 18, 30);
         LocalDateTime endDate_6_30 = LocalDateTime.of(2021, Month.JANUARY, 2, 18, 30);
-
         LocalDateTime startDate_8_30 = LocalDateTime.of(2020, Month.DECEMBER, 23, 20, 30);
         LocalDateTime endDate_8_30 = LocalDateTime.of(2021, Month.JANUARY, 2, 20, 30);
-
         generateShows(startDate_6_30, endDate_6_30);
         generateShows(startDate_8_30, endDate_8_30);
     }
 
+
+    //generate a list of seats and a date time to represent a show
     private static void generateShows(LocalDateTime startDate, LocalDateTime endDate) {
-
-
         DateTimeFormatter formattedDateTimeString = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
         for (int i = 0; i <= startDate.until(endDate, ChronoUnit.DAYS); i++) {
             String DateTimeString = startDate.plusDays(i).format(formattedDateTimeString);
             ArrayList<Seat> seats = new ArrayList<>();
             String[] seatNames = new String[]{"m", "sb", "wb", "eb"};
-
             for (String n : seatNames) {
                 for (int j = 1; j <= 150; j++) {
                     double price = 0;
@@ -169,6 +168,7 @@ o East Balconies: $40 (eb1-wb100)
 
     }
 
+    //miscellaneous function used to check if string inputs are composed of digits
     private static boolean onlyDigits(String str) {
         // Regex to check string
         // contains only digits
@@ -192,6 +192,7 @@ o East Balconies: $40 (eb1-wb100)
         return m.matches();
     }
 
+    //function used to generate unique confirmation numbers
     private static String createRandNums() {
         final Random rnd = new Random();
         final int N = 100;
@@ -208,6 +209,7 @@ o East Balconies: $40 (eb1-wb100)
         return result;
     }
 
+    //miscellaneous function used to print nice display messages
     private static void printNiceMessage(String message) {
         int messageLength = message.length();
         int borderLength = messageLength + 4;
@@ -222,6 +224,7 @@ o East Balconies: $40 (eb1-wb100)
         printBorder(borderLength);
     }
 
+
     private static void printBorder(int length) {
         for (int i = 0; i < length; i++) {
             System.out.print("-");
@@ -230,7 +233,7 @@ o East Balconies: $40 (eb1-wb100)
     }
 
     public static void main(String[] args) throws IOException {
-        initializeDatabase();
+        initializeShowDatabase();
         printNiceMessage("Miracle on 34th Street");
         mainMenu();
 
@@ -317,17 +320,57 @@ o East Balconies: $40 (eb1-wb100)
 
     private static void transactionSession(BufferedReader br, Customer c) throws IOException {
         String input;
-        ArrayList<Seat> reservations = new ArrayList<>();
+        //list of seat reservations made during transaction session
+
+        //when user clicks "O", end transaction session and terminate temporary list of seats
+        ArrayList<Seat> reservations;
         do {
             printNiceMessage("Transaction Mode");
 
             System.out.println("[R]eserve\n" + "[V]iew\n" + "[C]ancel\n" + "[O]ut");
             input = br.readLine();
             if (input.equalsIgnoreCase("r")) {
+                reservations = new ArrayList<>();
                 //begin reservation session
                 reservationSession(br, reservations, c);
-
             } else if (input.equalsIgnoreCase("v")) {
+                for (String key : c.getShowReservations().keySet()) {
+                    System.out.println(key + ":" + c.getShowReservations().get(key));
+                }
+//                System.out.println(c.getShowReservations().toString());
+//                if (!c.getShowReservations().isEmpty()) {
+//                    do {
+//                        System.out.println("[A] view entire reservations\n[B] view reservations by date\n[C] back");
+//                        input = br.readLine();
+//                        if (input.equalsIgnoreCase("a")) {
+////                            LocalDateTime[] schedules = new LocalDateTime[c.getShowReservations().keySet().size()];
+////                            int i = 0;
+//                            ArrayList<LocalDateTime> schedules = new ArrayList<>();
+//                            for (String key : c.getShowReservations().keySet()) {
+////                                DateTimeFormatter formattedDateTimeString = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+////                                LocalDateTime dateTime = LocalDateTime.parse(key, formattedDateTimeString);
+////                                schedules.add(dateTime);
+//                                System.out.println(key);
+////                                schedules[i] = dateTime;
+////                                ++i;
+//                            }
+//
+//
+////                            for (LocalDateTime s : schedules) {
+////                                System.out.println(s.toString());
+////                            }
+//
+//                        } else if (input.equalsIgnoreCase("b")) {
+//
+//                        } else if (input.equalsIgnoreCase("c")) {
+//                            break;
+//                        } else {
+//                            System.out.println("Invalid Input");
+//                        }
+//                    }
+//                    while (true);
+//                }
+
 
                 //list user reservations
             } else if (input.equalsIgnoreCase("c")) {
@@ -335,18 +378,38 @@ o East Balconies: $40 (eb1-wb100)
             } else if (input.equalsIgnoreCase("o")) {
                 ArrayList<Double> listOfTotalPrices = new ArrayList<>();
 
-                for (String key : c.getShowReservations().keySet()) {
-//                    System.out.println(key);
-                    DateTimeFormatter formattedDateTimeString = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
-                    LocalDateTime dateTime = LocalDateTime.parse(key, formattedDateTimeString);
-                    if ((dateTime.getMonth() == Month.DECEMBER && dateTime.getDayOfMonth() == 27) || (dateTime.getMonth() == Month.DECEMBER && dateTime.getDayOfMonth() == 26)) {
-                        // do not apply group discounts
-                    }
-//                    System.out.println(dateTime.getMonth());
-//                    System.out.println(dateTime.getDayOfMonth());
-//                    System.out.println(dateTime.getMonth() + " " + dateTime.getDayOfMonth());
-
-                }
+//                for (String key : c.getShowReservations().keySet()) {
+//                    DateTimeFormatter formattedDateTimeString = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+//                    LocalDateTime dateTime = LocalDateTime.parse(key, formattedDateTimeString);
+//
+//                    if ((dateTime.getMonth() == Month.DECEMBER && dateTime.getDayOfMonth() == 27) || (dateTime.getMonth() == Month.DECEMBER && dateTime.getDayOfMonth() == 26)) {
+//                        //no group discount during discount night
+//                    }
+//
+//                }
+//                System.out.println(reservations);
+//                if (c.getShowReservations().isEmpty()) {
+//                    continue;
+//                } else {
+//                    for (String key : c.getShowReservations().keySet()) {
+//                        DateTimeFormatter formattedDateTimeString = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+//                        LocalDateTime dateTime = LocalDateTime.parse(key, formattedDateTimeString);
+//                        if ((dateTime.getMonth() == Month.DECEMBER && dateTime.getDayOfMonth() == 27) || (dateTime.getMonth() == Month.DECEMBER && dateTime.getDayOfMonth() == 26)) {
+////                        // do not apply group discounts
+//
+//                        }
+//                        System.out.println(c.getShowReservations().get(key));
+//                    }
+//                }
+//                for (String key : c.getShowReservations().keySet()) {
+////                    System.out.println(key);
+////                    DateTimeFormatter formattedDateTimeString = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+////                    LocalDateTime dateTime = LocalDateTime.parse(key, formattedDateTimeString);
+////                    if ((dateTime.getMonth() == Month.DECEMBER && dateTime.getDayOfMonth() == 27) || (dateTime.getMonth() == Month.DECEMBER && dateTime.getDayOfMonth() == 26)) {
+////                        // do not apply group discounts
+////                    }
+//                    System.out.println(c.getShowReservations().get(key));
+//                }
 
                 break;
             } else {
@@ -355,11 +418,10 @@ o East Balconies: $40 (eb1-wb100)
         } while (true);
     }
 
-    private static void reservationSession(BufferedReader br, ArrayList<Seat> reservations, Customer c) throws IOException {
+    public static void reservationSession(BufferedReader br, ArrayList<Seat> reservations, Customer c) throws IOException {
         String dateTime = null;
         String input;
         printNiceMessage("Reservation Session");
-
         do {
 
             System.out.println("==================");
@@ -369,10 +431,12 @@ o East Balconies: $40 (eb1-wb100)
             System.out.println("==================");
             System.out.println("Enter a date and time : (input must follow the date format: `2020-01-23 18:30`) or press quit (q)");
             input = br.readLine();
-            if (input.equalsIgnoreCase("q") && dateTime == null) {
-                break;
-            } else if (input.equalsIgnoreCase("q") && dateTime != null) {
-                c.addReservation(dateTime, reservations);
+//            if (input.equalsIgnoreCase("q") && dateTime == null) {
+//                break;
+//            } else
+
+            if (input.equalsIgnoreCase("q")) {
+//                c.addReservation(dateTime, reservations);
                 break;
             } else {
                 dateTime = input;
@@ -390,9 +454,10 @@ o East Balconies: $40 (eb1-wb100)
                     for (Seat s : reservations) {
                         System.out.println(s.toString());
                     }
-                    System.out.println("Select a seat or press quit(q)");
+                    printNiceMessage("Select a seat or press quit(q)");
                     input = br.readLine();
                     if (input.equalsIgnoreCase("q")) {
+                        c.addReservation(dateTime, reservations);
                         break;
                     }
                     if (onlyDigits(input)) {
@@ -400,9 +465,13 @@ o East Balconies: $40 (eb1-wb100)
                         if (seatNum < 0 || seatNum >= seatListReference.size()) {
                             System.out.println("Does not exist");
                         } else {
-                            Seat s = seatListReference.get(seatNum);
-                            s.setAvailable(false);
-                            reservations.add(s);
+                            if (seatListReference.get(seatNum).isAvailable()) {
+                                Seat s = seatListReference.get(seatNum);
+                                s.setAvailable(false);
+                                reservations.add(s);
+                            } else {
+                                System.out.println("Seat not available!");
+                            }
                         }
                     } else {
                         System.out.println("Invalid input!");
