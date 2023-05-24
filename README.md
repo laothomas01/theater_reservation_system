@@ -1,4 +1,4 @@
--------------
+```-------------
 | Main Menu |
 -------------
 Sign [U]p
@@ -7697,4 +7697,4 @@ x
 Good bye
 
 Process finished with exit code 0
-
+```
