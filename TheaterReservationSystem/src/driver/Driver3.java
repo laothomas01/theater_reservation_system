@@ -153,18 +153,8 @@ public class Driver3 {
             Database_Of_Shows.put(DateTimeString, seats);
 
 
-/*
-o Main Floor: $35 (left side: m1-m50, right side:m51-m100), $45 (m101-m150)
-o South Balcony: $50 (sb1-sb25), $55(sb26-sb50)
-o West Balconies: $40 (wb1-wb100)
-o East Balconies: $40 (eb1-wb100)
-* */
-
         }
 
-//        for (Seat s : Database_Of_Shows.get("2020-12-23 18:30")) {
-//            System.out.println(s.toString() + "\n");
-//        }
 
     }
 
@@ -234,9 +224,7 @@ o East Balconies: $40 (eb1-wb100)
 
     public static void main(String[] args) throws IOException {
         initializeShowDatabase();
-        printNiceMessage("Miracle on 34th Street");
         mainMenu();
-
     }
 
 
@@ -310,6 +298,9 @@ o East Balconies: $40 (eb1-wb100)
                     //enter transaction session
                     if (password.equals(c.getPassword())) {
                         transactionSession(br, c);
+                        //print receipt data
+
+                        //handle receipt data if we want to "charge" customer
                     }
                     //display customer's receipt
                 }
@@ -326,90 +317,44 @@ o East Balconies: $40 (eb1-wb100)
         ArrayList<Seat> reservations;
         do {
             printNiceMessage("Transaction Mode");
-
             System.out.println("[R]eserve\n" + "[V]iew\n" + "[C]ancel\n" + "[O]ut");
             input = br.readLine();
             if (input.equalsIgnoreCase("r")) {
-                reservations = new ArrayList<>();
                 //begin reservation session
-                reservationSession(br, reservations, c);
+                reservationSession(br, c);
             } else if (input.equalsIgnoreCase("v")) {
-                for (String key : c.getShowReservations().keySet()) {
-                    System.out.println(key + ":" + c.getShowReservations().get(key));
-                }
-//                System.out.println(c.getShowReservations().toString());
-//                if (!c.getShowReservations().isEmpty()) {
-//                    do {
-//                        System.out.println("[A] view entire reservations\n[B] view reservations by date\n[C] back");
-//                        input = br.readLine();
-//                        if (input.equalsIgnoreCase("a")) {
-////                            LocalDateTime[] schedules = new LocalDateTime[c.getShowReservations().keySet().size()];
-////                            int i = 0;
-//                            ArrayList<LocalDateTime> schedules = new ArrayList<>();
-//                            for (String key : c.getShowReservations().keySet()) {
-////                                DateTimeFormatter formattedDateTimeString = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
-////                                LocalDateTime dateTime = LocalDateTime.parse(key, formattedDateTimeString);
-////                                schedules.add(dateTime);
-//                                System.out.println(key);
-////                                schedules[i] = dateTime;
-////                                ++i;
-//                            }
-//
-//
-////                            for (LocalDateTime s : schedules) {
-////                                System.out.println(s.toString());
-////                            }
-//
-//                        } else if (input.equalsIgnoreCase("b")) {
-//
-//                        } else if (input.equalsIgnoreCase("c")) {
-//                            break;
-//                        } else {
-//                            System.out.println("Invalid Input");
-//                        }
-//                    }
-//                    while (true);
-//                }
-
-
                 //list user reservations
             } else if (input.equalsIgnoreCase("c")) {
                 //begin cancellation session
             } else if (input.equalsIgnoreCase("o")) {
-                ArrayList<Double> listOfTotalPrices = new ArrayList<>();
-
-//                for (String key : c.getShowReservations().keySet()) {
-//                    DateTimeFormatter formattedDateTimeString = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
-//                    LocalDateTime dateTime = LocalDateTime.parse(key, formattedDateTimeString);
-//
-//                    if ((dateTime.getMonth() == Month.DECEMBER && dateTime.getDayOfMonth() == 27) || (dateTime.getMonth() == Month.DECEMBER && dateTime.getDayOfMonth() == 26)) {
-//                        //no group discount during discount night
-//                    }
-//
-//                }
-//                System.out.println(reservations);
-//                if (c.getShowReservations().isEmpty()) {
-//                    continue;
-//                } else {
-//                    for (String key : c.getShowReservations().keySet()) {
-//                        DateTimeFormatter formattedDateTimeString = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
-//                        LocalDateTime dateTime = LocalDateTime.parse(key, formattedDateTimeString);
-//                        if ((dateTime.getMonth() == Month.DECEMBER && dateTime.getDayOfMonth() == 27) || (dateTime.getMonth() == Month.DECEMBER && dateTime.getDayOfMonth() == 26)) {
-////                        // do not apply group discounts
-//
-//                        }
-//                        System.out.println(c.getShowReservations().get(key));
-//                    }
-//                }
-//                for (String key : c.getShowReservations().keySet()) {
-////                    System.out.println(key);
-////                    DateTimeFormatter formattedDateTimeString = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
-////                    LocalDateTime dateTime = LocalDateTime.parse(key, formattedDateTimeString);
-////                    if ((dateTime.getMonth() == Month.DECEMBER && dateTime.getDayOfMonth() == 27) || (dateTime.getMonth() == Month.DECEMBER && dateTime.getDayOfMonth() == 26)) {
-////                        // do not apply group discounts
-////                    }
-//                    System.out.println(c.getShowReservations().get(key));
-//                }
+                DateTimeFormatter formattedDateTimeString = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+                for (String key : c.getShowReservations().keySet()) {
+                    double totalPrice = 0;
+                    System.out.println("DateTime: " + key);
+                    printNiceMessage("Prices");
+                    LocalDateTime dateTime = LocalDateTime.parse(key, formattedDateTimeString);
+                    if ((dateTime.getMonth() == Month.DECEMBER && dateTime.getDayOfMonth() == 27) || (dateTime.getMonth() == Month.DECEMBER && dateTime.getDayOfMonth() == 26)) {
+                        //no group discount during discount night
+                        for (Seat s : c.getShowReservations().get(key)) {
+                            System.out.println(" $" + s.getSeatPrice());
+                            totalPrice += s.getSeatPrice();
+                        }
+                    } else {
+                        int personCount = 0;
+                        for (Seat s : c.getShowReservations().get(key)) {
+                            System.out.println(" $" + s.getSeatPrice());
+                            totalPrice += s.getSeatPrice();
+                            personCount += 1;
+                        }
+                        if (personCount >= 5 && personCount <= 10) {
+                            totalPrice -= 2 * personCount;
+                        } else if (personCount >= 11 && personCount <= 20) {
+                            totalPrice -= 5 * personCount;
+                        }
+                    }
+                    printNiceMessage("Total Price:");
+                    System.out.println("$" + totalPrice);
+                }
 
                 break;
             } else {
@@ -418,67 +363,63 @@ o East Balconies: $40 (eb1-wb100)
         } while (true);
     }
 
-    public static void reservationSession(BufferedReader br, ArrayList<Seat> reservations, Customer c) throws IOException {
-        String dateTime = null;
-        String input;
+    public static void reservationSession(BufferedReader br, Customer c) throws IOException {
+        String seatStr;
+        String dateTime;
         printNiceMessage("Reservation Session");
         do {
-
             System.out.println("==================");
             for (String key : Database_Of_Shows.keySet()) {
                 System.out.println("|" + key + "|");
             }
             System.out.println("==================");
             System.out.println("Enter a date and time : (input must follow the date format: `2020-01-23 18:30`) or press quit (q)");
-            input = br.readLine();
-//            if (input.equalsIgnoreCase("q") && dateTime == null) {
-//                break;
-//            } else
-
-            if (input.equalsIgnoreCase("q")) {
-//                c.addReservation(dateTime, reservations);
+            dateTime = br.readLine();
+            if (dateTime.equalsIgnoreCase("q")) {
                 break;
-            } else {
-                dateTime = input;
-            }
-            if (Database_Of_Shows.containsKey(dateTime)) {
-                ArrayList<Seat> seatListReference = Database_Of_Shows.get(dateTime);
+            } else if (Database_Of_Shows.containsKey(dateTime)) {
+                ArrayList<Seat> userReservations = new ArrayList<>();
+                ArrayList<Seat> showSeats = Database_Of_Shows.get(dateTime);
                 do {
+
                     printNiceMessage("Seat Selection");
                     int i = 0;
-                    for (Seat s : seatListReference) {
+                    for (Seat s : showSeats) {
                         System.out.println(" [ " + i + " ] " + s.toString());
                         i += 1;
                     }
+
                     printNiceMessage("User Reservations");
-                    for (Seat s : reservations) {
+                    for (Seat s : userReservations) {
                         System.out.println(s.toString());
                     }
-                    printNiceMessage("Select a seat or press quit(q)");
-                    input = br.readLine();
-                    if (input.equalsIgnoreCase("q")) {
-                        c.addReservation(dateTime, reservations);
+                    System.out.println("Enter a seat number or press quit (q)");
+                    seatStr = br.readLine();
+                    if (seatStr.equalsIgnoreCase("q")) {
+                        c.addReservation(dateTime, userReservations);
                         break;
                     }
-                    if (onlyDigits(input)) {
-                        int seatNum = Integer.parseInt(input);
-                        if (seatNum < 0 || seatNum >= seatListReference.size()) {
-                            System.out.println("Does not exist");
+                    if (onlyDigits(seatStr)) {
+                        int seatNum = Integer.parseInt(seatStr);
+                        if (seatNum < 0 || seatNum >= showSeats.size()) {
+                            System.out.println("Seat does not exist!");
                         } else {
-                            if (seatListReference.get(seatNum).isAvailable()) {
-                                Seat s = seatListReference.get(seatNum);
+                            Seat s = showSeats.get(seatNum);
+                            if (s.isAvailable()) {
                                 s.setAvailable(false);
-                                reservations.add(s);
+                                userReservations.add(s);
                             } else {
-                                System.out.println("Seat not available!");
+                                System.out.println("Seat not available");
                             }
+
                         }
+
                     } else {
-                        System.out.println("Invalid input!");
+                        System.out.println("Invalid Input!");
                     }
+
+
                 } while (true);
-            } else {
-                System.out.println("Does not exist!");
             }
         } while (true);
     }
