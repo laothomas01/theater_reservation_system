@@ -1,3 +1,27 @@
+# Theater Reservation System
+
+## Motivation
+- practice use case analysis, analyzing design documents and system design
+## Tools
+- coded in java
+- used UML diagram to map out use cases and class relationships
+## Features
+- Signing Up
+- Signing In
+- Exiting
+- Reserving seats
+- Viewing reserved seats (WIP)
+- Canceling reserved seats (WIP)
+- Signing out
+- Printing receipt of customer
+- Persisting and loading show and customer data
+## Challenges faced
+- code organization
+- unit testing
+- making code more modular
+## Future changes
+- unclutter code from main file
+## Example
 ```-------------
 | Main Menu |
 -------------
